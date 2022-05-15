@@ -12,5 +12,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        val torch = Torch(this)
+
+        binding.switchFlash.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                torch.flashOn()
+            } else {
+                torch.flashOff()
+            }
+        }
     }
 }
