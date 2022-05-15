@@ -1,8 +1,10 @@
 package blog.jinhyun.flashlight
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
 import android.widget.RemoteViews
 
 /**
@@ -60,10 +62,22 @@ internal fun updateAppWidget(
     appWidgetId: Int
 ) {
     val widgetText = context.getString(R.string.appwidget_text)
-    // 위젯에 배치하는 뷰가 따로 있는데 RemoteViews 객체로 가져올 수 있음
+    // RemoteViews 객체는 위젯의 전체 레이아웃 정보
     val views = RemoteViews(context.packageName, R.layout.torch_app_widget)
     // RemoteViews 객체용으로 준비된 텍스트값을 변경하는 함수
     views.setTextViewText(R.id.appwidget_text, widgetText)
+
+    // 실행할 인텐트 작성
+    val intent = Intent(context, TorchService::class.java)
+    val pendingIntent = PendingIntent.getService(
+        context,
+        0,
+        intent,
+        PendingIntent.FLAG_IMMUTABLE
+    )
+
+    // 위젯을 클릭하면 위에서 정의한 인텐트 실행
+    views.setOnClickPendingIntent(R.id.layout_appwidget, pendingIntent)
 
     // 위젯을 업데이트하는 함수
     appWidgetManager.updateAppWidget(appWidgetId, views)
